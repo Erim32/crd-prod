@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "accompagnants",
+  "info": {
+    "singularName": "accompagnant",
+    "pluralName": "accompagnants",
+    "displayName": "accompagnant"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "invite": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::invite.invite",
+      "inversedBy": "accompagnants"
+    },
+    "nom": {
+      "type": "string"
+    },
+    "prenom": {
+      "type": "string"
+    }
+  }
+}
