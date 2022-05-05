@@ -1,0 +1,11 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+CLASS:PUBLIC
+DESCRIPTION:Cérémonie de remise des diplomes des promotions 2020 & 2021\nNous avons le plaisir de vous convier à la cérémonie de remise des diplômes des promotions 2020 et 2021 de Toulouse. Nous comptons sur votre présence. Diplomés\, étudiants\, universitaires et professionnels du réseau miagiste se réuniront pour partager de moment de convivialité. \n
+DTSTART:20220617T180000Z
+DTEND:20220617T225900Z
+LOCATION:Université Toulouse III - Paul Sabatier
+SUMMARY;LANGUAGE=en-us:Cérémonie de remise des diplomes des promotions 2020 & 2021
+END:VEVENT
+END:VCALENDAR

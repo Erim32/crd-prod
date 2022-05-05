@@ -1,0 +1,65 @@
+/* HEADER */
+
+.text-header {
+    margin-top: 30px;
+    color: white;
+    font-size: 25px;
+    line-height: 50px;
+}
+
+.text-info {
+    color: white !important;
+}
+
+
+.bg-primary {
+    background-color: #3F717C !important;
+}
+
+/* PROGRAMME */
+
+#sousTitreProgramme {
+    font-size: 12px;
+    color: #9a9a9a;
+}
+
+.programme-content {
+    margin-top: 50px;
+}
+
+#programme h3 .fas {
+    color: #3F717C;
+    font-size: 40px;
+}
+
+
+
+/* SCROLL BAR */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 100% !important;
+    }
+}
+
