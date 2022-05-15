@@ -11,7 +11,7 @@ const SEND_REAL_EMAIL = true
 const EMAIL_CONFIG = {
   date : "Vendredi 17 Juin 2022",
   heure : "19h00",
-  lieu : "au batiment administratif de l'université Paul Sabatier - Toulouse",
+  lieu : "au batiment administratif de l'Université Paul Sabatier - Toulouse",
 }
 
 /**
@@ -31,9 +31,18 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const CHECK_ONE_INSCRIPTION_PER_PERSON = false
 
-/* Fonctions utilitaitres */
+/* ----------------------------------------------- *
+ * Fonctions utilitaitres
+ * ----------------------------------------------- */
+
 function setError(message, response) {
   response.status = 'error';
+  response.data.message = message;
+  return response;
+}
+
+function setSuccess(message, response) {
+  response.status = 'success';
   response.data.message = message;
   return response;
 }
@@ -42,7 +51,7 @@ function firstLetterToUpperCase(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function sendMail(destinator='', subject='test', messagehtml = "") {
+function sendMail(destinator='', subject='', messagehtml = "") {
   const GOOGLE_CLOUD_CONSOLE_EMAIL_ACCOUNT = "ceremonie-diplomes@miage.org"
   const accessToken = myOAuth2Client.getAccessToken();
   const transporter = nodeMailer.createTransport({
@@ -75,11 +84,11 @@ function sendMail(destinator='', subject='test', messagehtml = "") {
       if (error) {
         console.log(error);
       } else {
-        console.log("Email sent to "+destinator);
+        console.log("Email sent to " + destinator);
       }
     });
   }else{
-    console.log("[DEBUG] Email sent to "+destinator);
+    console.log("[DEBUG] Email sent to " + destinator);
   }
   // Fermeture de la connexion
   transporter.close();
@@ -102,7 +111,7 @@ async function debugSendEmailTemplateTester(ctx, title='Save the Date !', file="
    // check email format using regex
    if (regexEmailValidation.test(emailAdress)) {
      sendMail(emailAdress, "[DEBUG] "+title, emailHTML)
-     return ctx.send("Email "+title+" envoyé a "+emailAdress+ " avec succès.", 400)
+     return ctx.send("Email "+title+" envoyé a " + emailAdress + " avec succès.", 400)
    }else{
      return ctx.send("Email invalide", 400)
    }
@@ -122,7 +131,7 @@ module.exports = {
     };
     // Extraction des données du body
     let body = ctx.request.body
-    console.log("body", body)
+    //console.log("body", body)
 
     // Verification des données reçues
     if (!body) {
@@ -156,7 +165,7 @@ module.exports = {
     }
 
     // Verification de cohérence sur les champs secondaires
-    if (body.promotion && !body.promotion.match(/^[0-9]{4}$/)) {
+    if (body.promotion && ! String(body?.promotion).match(/^[0-9]{4}$/)) {
       response = setError('La Promotion n\'est pas valide', response);
       return ctx.send(response, 418)
     }
@@ -190,11 +199,12 @@ module.exports = {
 
     // Verification de l'unicité de l'email
     let isAlreadyExist = await (await strapi.entityService.findMany('api::invite.invite')).find(invite => invite.email === body.email)
-    console.log("isAlreadyExist", isAlreadyExist)
+    //console.log("isAlreadyExist", isAlreadyExist)
     if (CHECK_ONE_INSCRIPTION_PER_PERSON && isAlreadyExist) {
       response = setError('Cet email est deja enregistré', response);
       return ctx.send(response, 418)
     }
+
     // Création de l'invité dans le format attendu par le service
     let newObj = {
       nom: body.nom,
@@ -226,15 +236,16 @@ module.exports = {
     }
 
     // Envoi de l'email de confirmation
-
-    // create a new directory name "ICI"
-
-    let emailConfirmationHTML = await fs.readFileSync('public/emails/email.html', 'utf8')
+    let emailConfirmationHTML = await fs.readFileSync('public/emails/email-confirmation-inscription.html', 'utf8')
     // Replace the placeholders with the data
     emailConfirmationHTML = emailConfirmationHTML.replace('{{nom}}', body.nom)
     emailConfirmationHTML = emailConfirmationHTML.replace('{{prenom}}', body.prenom)
-    // sendMail()
-    return ctx.send(emailConfirmationHTML, 200)
+    emailConfirmationHTML = emailConfirmationHTML.replace('{{date}}', EMAIL_CONFIG.date)
+    emailConfirmationHTML = emailConfirmationHTML.replace('{{heure}}', EMAIL_CONFIG.heure)
+    emailConfirmationHTML = emailConfirmationHTML.replace('{{lieu}}', EMAIL_CONFIG.lieu)
+    sendMail(body.email, "Confirmation d'inscription", emailConfirmationHTML)
+    setSuccess('Inscription effectuée avec succès', response);
+    return ctx.send(response, 200)
   },
 
   /**
